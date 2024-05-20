@@ -27,9 +27,7 @@ namespace TeamHubServiceProjects.UseCases.Providers
                 Name = project.Name,
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
-                projecttask = null,
                 projectstudent = null,
-                projectdocument = null
             };
             return projectServices.AddProject(projectNew);
         }
@@ -47,9 +45,7 @@ namespace TeamHubServiceProjects.UseCases.Providers
                 Name = projectUpdate.Name,
                 StartDate = projectUpdate.StartDate,
                 EndDate = projectUpdate.EndDate,
-                projecttask = null,
                 projectstudent = null,
-                projectdocument = null
             };
             return projectServices.UpdateProject(projectNew);
         }

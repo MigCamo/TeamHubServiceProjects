@@ -37,7 +37,7 @@ builder.Services.AddAuthentication(options => {
 
 builder.Services.AddScoped<IProjectManagement, ProjectManagement>();
 builder.Services.AddScoped<IProjectServices, ProjectServices>();
-builder.Services.AddDbContext<CursosContext>(options => {
+builder.Services.AddDbContext<TeamHubContext>(options => {
     var connectionString = builder.Configuration
                            .GetConnectionString("MySQLCursos")?? "DefaultConnectionString";
     options.UseMySQL(connectionString);

@@ -6,9 +6,9 @@ namespace TeamHubServiceProjects.Gateways.Providers;
 
 public class ProjectServices : IProjectServices
 {
-    private CursosContext dbContext;
+    private TeamHubContext dbContext;
 
-    public ProjectServices(CursosContext dbContext)
+    public ProjectServices(TeamHubContext dbContext)
     {
         this.dbContext = dbContext;
     }
@@ -63,7 +63,6 @@ public class ProjectServices : IProjectServices
             {
                 projectDB.Name = projectUpdate.Name;
                 projectDB.projectstudent = projectUpdate.projectstudent;
-                projectDB.projectdocument = projectUpdate.projectdocument;
                 projectDB.StartDate = projectUpdate.StartDate;
                 projectDB.EndDate = projectUpdate.EndDate;
                 dbContext.project.Update(projectDB);
