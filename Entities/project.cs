@@ -13,6 +13,8 @@ public partial class project
 
     public DateTime? EndDate { get; set; }
 
+    public string? Status { get; set; }
+
     public virtual ICollection<document> document { get; set; } = new List<document>();
 
     public virtual ICollection<projectstudent> projectstudent { get; set; } = new List<projectstudent>();

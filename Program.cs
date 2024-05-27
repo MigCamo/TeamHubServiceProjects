@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using TeamHubServiceProjects.DTOs;
 using TeamHubServiceProjects.Entities;
 using TeamHubServiceProjects.Gateways.Interfaces;
 using TeamHubServiceProjects.Gateways.Providers;
@@ -43,8 +44,6 @@ builder.Services.AddDbContext<TeamHubContext>(options => {
     options.UseMySQL(connectionString);
 });
 
-
-
 //builder.Services.AddAuthorization();
 /*
 builder.Services.AddAuthorizationBuilder()
@@ -57,7 +56,6 @@ builder.Services.AddCors();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -65,29 +63,36 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-
 //app.UseCors();
 //app.UseAuthentication();
 //app.UseAuthorization();
 
-app.MapGet("/Projects", (IProjectManagement projectManagement) =>
+app.MapGet("/TeamHub/Projects/MyProjects/{studentID}", (IProjectManagement projectManagement, int studentID) =>
 {
-        return projectManagement.GetAllProjects();
+        return projectManagement.GetAllProjectsByStuden(studentID);
 })
 .WithName("GetListaProyectos")
 //.RequireAuthorization("usuario_valido")
 .WithOpenApi();
 
-app.MapPost("/Projects", (IProjectManagement projectManagement, project projectnew) =>
+app.MapGet("/TeamHub/Projects/{idProject}", (IProjectManagement projectManagement, int idProject) =>
 {
-    return projectManagement.AddProject(projectnew);
+        return projectManagement.GetProjectByID(idProject);
 })
-.WithName("AddProyect")
+.WithName("ObtenerProyecto")
 //.RequireAuthorization("usuario_valido")
 .WithOpenApi();
 
-app.MapPut("/Projects", (IProjectManagement projectManagement, project projectUpdate) =>
+
+app.MapPost("/TeamHub/Projects/AddProject", (IProjectManagement projectManagement, AddProjectRequestDTO request) =>
+{
+    return projectManagement.AddProject(request.ProjectNew, request.StudentID);
+})
+.WithName("AgregarProyecto")
+//.RequireAuthorization("usuario_valido")
+.WithOpenApi();
+
+app.MapPost("/TeamHub/Projects/UpdateProject", (IProjectManagement projectManagement, project projectUpdate) =>
 {
     return projectManagement.UpdateProject(projectUpdate);
 })
