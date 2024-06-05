@@ -1,4 +1,5 @@
 
+using TeamHubServiceProjects.DTOs;
 using TeamHubServiceProjects.Entities;
 using TeamHubServiceProjects.Gateways.Interfaces;
 
@@ -13,16 +14,11 @@ public class ProjectServices : IProjectServices
         this.dbContext = dbContext;
     }
 
-    public bool AddProject(project projectNew, int studentID)
+    public bool AddProject(project projectNew)
     {
         try
         {
             dbContext.project.Add(projectNew);
-            dbContext.SaveChanges();
-            projectstudent projectstudentaux = new projectstudent();
-            projectstudentaux.IdStudent = studentID;
-            projectstudentaux.IdProject = projectNew.IdProject;
-            dbContext.projectstudent.Add(projectstudentaux);
             dbContext.SaveChanges();
             return true;
         }
@@ -37,7 +33,7 @@ public class ProjectServices : IProjectServices
         try
         {
             var projectDB = dbContext.project.Find(projectId);
-            if (projectDB != null)
+            if (projectDB != null) 
             {
                 dbContext.Remove(projectDB);
                 dbContext.SaveChanges();
@@ -54,24 +50,22 @@ public class ProjectServices : IProjectServices
         }
     }
 
-    public List<project> GetAllProjectsByStudentID(int studentID)
+    public List<project> GetProjects()
     {
-        return dbContext.project
-                        .Where(p => p.projectstudent.Any(ps => ps.IdStudent == studentID))
-                        .ToList();
+        return dbContext.project.ToList();
     }
 
     public bool UpdateProject(project projectUpdate)
     {
         try
         {
-            var projectDB = dbContext.project.Find(projectUpdate.IdProject);
-            if (projectDB != null)
+            var projectDB = dbContext.project.Find(projectUpdate.Name);
+            if (projectDB != null) 
             {
                 projectDB.Name = projectUpdate.Name;
+                projectDB.projectstudent = projectUpdate.projectstudent;
                 projectDB.StartDate = projectUpdate.StartDate;
                 projectDB.EndDate = projectUpdate.EndDate;
-                projectDB.Status = projectUpdate.Status;
                 dbContext.project.Update(projectDB);
                 dbContext.SaveChanges();
                 return true;
@@ -83,14 +77,57 @@ public class ProjectServices : IProjectServices
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Error updating project: {ex.Message}");
             return false;
         }
     }
 
-
-    public project GetProjectByID(int projectId)
+    public project GetProject(int IdProject)
     {
-        return dbContext.project.Find(projectId);
+        project project = null;
+        try
+        {
+            var projectDB = dbContext.project.Find(IdProject);
+            if (projectDB != null)
+            {
+                project = new project
+                {
+                    Name = projectDB.Name,
+                    StartDate = projectDB.StartDate,
+                    EndDate = projectDB.EndDate,
+                    tasks = projectDB.tasks
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+        return project;
     }
+
+    public List<TaskDTO> GetTasksByProject(int idProject)
+    {
+        List<TaskDTO> listTask = new List<TaskDTO>();
+        try
+        {
+            listTask = dbContext.tasks
+                .Where(t => t.IdProject == idProject)
+                .Select(t => new TaskDTO {
+                    IdTask = t.IdTask,
+                    Name = t.Name,
+                    Description = t.Description,
+                    StartDate = t.StartDate,
+                    EndDate = t.EndDate,
+                    IdProject = t.IdProject,
+                    Status = "Hola"
+                })
+                .ToList();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+        return listTask;
+    }   
 }

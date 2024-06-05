@@ -1,5 +1,6 @@
 
 
+using TeamHubServiceProjects.DTOs;
 using TeamHubServiceProjects.Entities;
 using TeamHubServiceProjects.Gateways.Interfaces;
 using TeamHubServiceProjects.UseCases.Interfaces;
@@ -14,22 +15,22 @@ namespace TeamHubServiceProjects.UseCases.Providers
         {
             this.projectServices = projectServices;
         }
-        public List<project> GetAllProjectsByStuden(int studentID)
+        public List<project> GetAllProjects()
         {
-            return projectServices.GetAllProjectsByStudentID(studentID);
+            return projectServices.GetProjects();
         }
 
-        public bool AddProject(project project, int studentID)
+        public bool AddProject(project project)
         {
-            project projectNew = new project()
+            project projectNew = new project() 
             {
                 IdProject = 0,
                 Name = project.Name,
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
-                Status = project.Status
+                projectstudent = null,
             };
-            return projectServices.AddProject(projectNew, studentID);
+            return projectServices.AddProject(projectNew);
         }
 
         public bool RemoveProject(int projectID)
@@ -39,20 +40,30 @@ namespace TeamHubServiceProjects.UseCases.Providers
 
         public bool UpdateProject(project projectUpdate)
         {
-            project projectNew = new project()
+            project projectNew = new project() 
             {
-                IdProject = projectUpdate.IdProject,
+                IdProject = 0,
                 Name = projectUpdate.Name,
                 StartDate = projectUpdate.StartDate,
                 EndDate = projectUpdate.EndDate,
-                Status = projectUpdate.Status
+                projectstudent = null,
             };
             return projectServices.UpdateProject(projectNew);
         }
 
-        public project GetProjectByID(int projectId)
+        public project GetProject(int IdProject)
         {
-            return projectServices.GetProjectByID(projectId);
+            project project = new project();
+            if (IdProject > 0){
+                project = projectServices.GetProject(IdProject);
+            }
+
+            return project;
         }
-    }
+
+        public List<TaskDTO> GetTasksByProject(int idProject)
+        {
+            return projectServices.GetTasksByProject(idProject);
+        }
+    } 
 }
