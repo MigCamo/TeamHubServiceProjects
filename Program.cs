@@ -102,6 +102,23 @@ app.MapDelete("/Projects", (IProjectManagement projectManagement, int idProject)
 .WithName("DeleteProject")
 //.RequireAuthorization("usuario_valido")
 .WithOpenApi();
+
+app.MapGet("/TeamHub/Projects/Project/{idProject}", (IProjectManagement projectManagement, int idProject) =>
+{
+    return projectManagement.GetProject(idProject);
+})
+.WithName("GetProject")
+//.RequireAuthorization("usuario_valido")
+.WithOpenApi();
+
+app.MapGet("/TeamHub/Projects/Project/Tasks/{idProject}", (IProjectManagement projectManagement, int idProject) =>
+{
+    return projectManagement.GetTasksByProject(idProject);
+})
+.WithName("GetProjectTasks")
+//.RequireAuthorization("usuario_valido")
+.WithOpenApi();
+
  
 app.Run();
 

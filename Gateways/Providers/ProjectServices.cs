@@ -1,4 +1,5 @@
 
+using TeamHubServiceProjects.DTOs;
 using TeamHubServiceProjects.Entities;
 using TeamHubServiceProjects.Gateways.Interfaces;
 
@@ -78,5 +79,55 @@ public class ProjectServices : IProjectServices
         {
             return false;
         }
+    }
+
+    public project GetProject(int IdProject)
+    {
+        project project = null;
+        try
+        {
+            var projectDB = dbContext.project.Find(IdProject);
+            if (projectDB != null)
+            {
+                project = new project
+                {
+                    Name = projectDB.Name,
+                    StartDate = projectDB.StartDate,
+                    EndDate = projectDB.EndDate,
+                    tasks = projectDB.tasks
+                };
+            }
+        }
+        catch (Exception ex)
+        {
+            return null;
+        }
+        return project;
+    }
+
+    public List<TaskDTO> GetTasksByProject(int idProject)
+    {
+        List<TaskDTO> listTask = new List<TaskDTO>();
+        try
+        {
+            listTask = dbContext.tasks
+                .Where(t => t.IdProject == idProject)
+                .Select(t => new TaskDTO {
+                    IdTask = t.IdTask,
+                    Name = t.Name,
+                    Description = t.Description,
+                    StartDate = t.StartDate,
+                    EndDate = t.EndDate,
+                    IdProject = t.IdProject,
+                    Status = "Hola"
+                })
+                .ToList();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex);
+        }
+
+        return listTask;
     }   
 }
