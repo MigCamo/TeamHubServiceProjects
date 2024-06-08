@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 /*
 builder.Services.AddAuthentication(options => {    
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -35,6 +36,7 @@ builder.Services.AddAuthentication(options => {
     };
 });
 */
+
 
 builder.Services.AddScoped<IProjectManagement, ProjectManagement>();
 builder.Services.AddScoped<IProjectServices, ProjectServices>();
@@ -75,14 +77,13 @@ app.MapGet("/TeamHub/Projects/MyProjects/{studentID}", (IProjectManagement proje
 //.RequireAuthorization("usuario_valido")
 .WithOpenApi();
 
-app.MapGet("/TeamHub/Projects/{idProject}", (IProjectManagement projectManagement, int idProject) =>
+app.MapGet("/TeamHub/Projects/Project/{idProject}", (IProjectManagement projectManagement, int idProject) =>
 {
         return projectManagement.GetProjectByID(idProject);
 })
 .WithName("ObtenerProyecto")
 //.RequireAuthorization("usuario_valido")
 .WithOpenApi();
-
 
 app.MapPost("/TeamHub/Projects/AddProject", (IProjectManagement projectManagement, AddProjectRequestDTO request) =>
 {
@@ -108,14 +109,6 @@ app.MapDelete("/Projects", (IProjectManagement projectManagement, int idProject)
 //.RequireAuthorization("usuario_valido")
 .WithOpenApi();
 
-app.MapGet("/TeamHub/Projects/Project/{idProject}", (IProjectManagement projectManagement, int idProject) =>
-{
-    return projectManagement.GetProject(idProject);
-})
-.WithName("GetProject")
-//.RequireAuthorization("usuario_valido")
-.WithOpenApi();
-
 app.MapGet("/TeamHub/Projects/Project/Tasks/{idProject}", (IProjectManagement projectManagement, int idProject) =>
 {
     return projectManagement.GetTasksByProject(idProject);
@@ -124,6 +117,5 @@ app.MapGet("/TeamHub/Projects/Project/Tasks/{idProject}", (IProjectManagement pr
 //.RequireAuthorization("usuario_valido")
 .WithOpenApi();
 
- 
 app.Run();
 

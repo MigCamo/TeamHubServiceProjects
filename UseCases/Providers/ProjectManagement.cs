@@ -15,22 +15,18 @@ namespace TeamHubServiceProjects.UseCases.Providers
         {
             this.projectServices = projectServices;
         }
-        public List<project> GetAllProjects()
-        {
-            return projectServices.GetProjects();
-        }
 
-        public bool AddProject(project project)
+        public bool AddProject(project project, int studentID)
         {
-            project projectNew = new project() 
+            project projectNew = new project()
             {
                 IdProject = 0,
                 Name = project.Name,
                 StartDate = project.StartDate,
                 EndDate = project.EndDate,
-                projectstudent = null,
+                Status = project.Status
             };
-            return projectServices.AddProject(projectNew);
+            return projectServices.AddProject(projectNew, studentID);
         }
 
         public bool RemoveProject(int projectID)
@@ -40,30 +36,30 @@ namespace TeamHubServiceProjects.UseCases.Providers
 
         public bool UpdateProject(project projectUpdate)
         {
-            project projectNew = new project() 
+            project projectNew = new project()
             {
-                IdProject = 0,
+                IdProject = projectUpdate.IdProject,
                 Name = projectUpdate.Name,
                 StartDate = projectUpdate.StartDate,
                 EndDate = projectUpdate.EndDate,
-                projectstudent = null,
+                Status = projectUpdate.Status
             };
             return projectServices.UpdateProject(projectNew);
         }
 
-        public project GetProject(int IdProject)
+        public project GetProjectByID(int projectId)
         {
-            project project = new project();
-            if (IdProject > 0){
-                project = projectServices.GetProject(IdProject);
-            }
-
-            return project;
+            return projectServices.GetProjectByID(projectId);
         }
 
         public List<TaskDTO> GetTasksByProject(int idProject)
         {
             return projectServices.GetTasksByProject(idProject);
         }
-    } 
+
+        public List<project> GetAllProjectsByStuden(int studenId)
+        {
+            return projectServices.GetAllProjectsByStudentID(studenId);
+        }
+    }
 }
